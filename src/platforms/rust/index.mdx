@@ -40,9 +40,10 @@ The `sentry::init` function returns a guard that when dropped, will flush Events
 
 ```rust {filename:main.rs}
 let _guard = sentry::init(("___PUBLIC_DSN___", sentry::ClientOptions {
-    release: sentry::release_name!(),
-    ..Default::default()
-}));
+        release: sentry::release_name!(),
+        ..Default::default()
+    },
+));
 ```
 
 **Important:** Remember your DSN. The DSN (Data Source Name) tells the SDK where to send events. If you forget it you can find it be going to: Settings -> Projects -> Client Keys (DSN) in sentry.io.
@@ -55,12 +56,13 @@ In a multithreaded application, spawned threads should inherit the Hub from the 
 // WRONG
 #[tokio::main]
 async fn main() {
-let _guard = sentry::init(("___PUBLIC_DSN___", sentry::ClientOptions {
-    release: sentry::release_name!(),
-    ..Default::default()
-}));
+    let _guard = sentry::init(("___PUBLIC_DSN___", sentry::ClientOptions {
+            release: sentry::release_name!(),
+            ..Default::default()
+        },
+    ));
 
-// implementation of main
+    // implementation of main
 }
 ```
 
@@ -69,12 +71,13 @@ Do this instead:
 ```rust {filename:main.rs}
 // RIGHT
 fn main() {
-let _guard = sentry::init(("___PUBLIC_DSN___", sentry::ClientOptions {
-    release: sentry::release_name!(),
-    ..Default::default()
-}));
+    let _guard = sentry::init(("___PUBLIC_DSN___", sentry::ClientOptions {
+            release: sentry::release_name!(),
+            ..Default::default()
+        },
+    ));
 
-tokio::runtime::Builder::new_multi_thread()
+    tokio::runtime::Builder::new_multi_thread()
         .enable_all()
         .build()
         .unwrap()
@@ -93,9 +96,10 @@ The quickest way to verify Sentry in your Rust application is to cause a panic:
 ```rust {filename:main.rs}
 fn main() {
     let _guard = sentry::init(("___PUBLIC_DSN___", sentry::ClientOptions {
-        release: sentry::release_name!(),
-        ..Default::default()
-    }));
+            release: sentry::release_name!(),
+            ..Default::default()
+        },
+    ));
 
     // Sentry will capture this
     panic!("Everything is on fire!");
